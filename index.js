@@ -86,13 +86,14 @@ run.updateBinary = () => {
       if (fs.existsSync(versionFile)) {
         currentVersion = require(versionFile).version;
       }
-      if (new Date(latestRemote).getTime() > new Date(currentVersion).getTime()) {
+      const isUpToDate = new Date(latestRemote).getTime() <= new Date(currentVersion).getTime();
+      if (!isUpToDate) {
         await downloadBinary();
         const version = await getBinaryVersion();
         fs.writeFileSync(versionFile, JSON.stringify({ version }, null, 2));
-        resolve({ time: (new Date().getTime() - startTime) / 1000, version });
+        resolve({ time: (new Date().getTime() - startTime) / 1000, isUpToDate, version });
       } else {
-        resolve({ time: (new Date().getTime() - startTime) / 1000, version: currentVersion });
+        resolve({ time: (new Date().getTime() - startTime) / 1000, isUpToDate, version: currentVersion });
       }
     } catch (error) {
       reject(error);
