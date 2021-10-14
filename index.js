@@ -49,7 +49,7 @@ function downloadBinary() {
         url += ".exe"
       }
 
-      got(url, { followRedirect: true, encoding: null })
+      got(url, { followRedirect: true, responseType: "buffer" })
         .then(resp => {
           fs.writeFileSync(filePath, resp.body, { mode: 0755 });
           resolve();

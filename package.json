@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/Delivator/yt-dlp.js#readme",
   "dependencies": {
-    "got": "^8.3.2"
+    "got": "^11.8.2"
   }
 }
