@@ -1,12 +1,12 @@
 const fs = require("fs");
 const got = require("got");
-const execFile = require("child_process").execFile;
+const { execFile } = require("child_process");
 
 const isWin = /^win/.test(process.platform);
 
-function getRemoteVersion() {
+function getLatestRemote() {
   return new Promise((resolve, reject) => {
-    const API_URL = "https://api.github.com/repos/rg3/yt-dlp/releases/latest";
+    const API_URL = "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest";
     got.get(API_URL)
       .then(response => {
         if (response.statusCode === 200) {
@@ -36,22 +36,27 @@ function getBinaryVersion() {
 }
 
 function downloadBinary() {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(__dirname + "/bin")) fs.mkdirSync(__dirname + "/bin");
-    let url, filePath;
-    if (isWin) {
-      url = "https://yt-dl.org/downloads/latest/yt-dlp.exe";
-      filePath = __dirname + "/bin/yt-dlp.exe";
-    } else {
-      url = "https://yt-dl.org/downloads/latest/yt-dlp";
-      filePath = __dirname + "/bin/yt-dlp";
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!fs.existsSync(__dirname + "/bin")) fs.mkdirSync(__dirname + "/bin");
+      
+      const latestVersion = await getLatestRemote();
+      let url = `https://github.com/yt-dlp/yt-dlp/releases/download/${latestVersion}/yt-dlp`;
+      let filePath = __dirname + "/bin/yt-dlp";
+      
+      if (isWin) {
+        filePath += ".exe"
+        url += ".exe"
+      }
+
+      got(url, { followRedirect: true, encoding: null })
+        .then(resp => {
+          fs.writeFileSync(filePath, resp.body, { mode: 0755 });
+          resolve();
+        });
+    } catch (error) {
+      reject(error);
     }
-    got(url, { followRedirect: true, encoding: null })
-      .then(resp => {
-        fs.writeFileSync(filePath, resp.body, { mode: 0755 });
-        resolve();
-      })
-      .catch(reject);
   });
 }
 
@@ -63,7 +68,7 @@ run = (url, args, options) => {
     if (!fs.existsSync(binaryPath)) {
       reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdl'");
     }
-    execFile(binaryPath, args, options, (error, stdout, stderr) => {
+    execFile(binaryPath, args, options, (error, stdout) => {
       if (error) reject(error);
       resolve(stdout.trim());
     });
@@ -71,35 +76,27 @@ run = (url, args, options) => {
 };
 
 run.updateBinary = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const startTime = new Date().getTime();
     const versionFile = __dirname + "/bin/version.json";
     let currentVersion = "0";
-    getRemoteVersion()
-      .then(remoteVersion => {
-        if (fs.existsSync(versionFile)) {
-          currentVersion = require(versionFile).version;
-        }
-        if (new Date(remoteVersion).getTime() > new Date(currentVersion).getTime()) {
-          downloadBinary()
-            .then(() => {
-              getBinaryVersion()
-                .then(binaryVersion => {
-                  const versionObj = {
-                    version: binaryVersion,
-                    downloadTime: new Date().getTime()
-                  };
-                  fs.writeFileSync(versionFile, JSON.stringify(versionObj, null, 2));
-                  resolve({ time: (new Date().getTime() - startTime) / 1000, version: binaryVersion });
-                })
-                .catch(reject);
-            })
-            .catch(reject);
-        } else {
-          resolve({ version: currentVersion, time: (new Date().getTime() - startTime) / 1000 });
-        }
-      })
-      .catch(reject);
+
+    try {
+      const latestRemote = await getLatestRemote();
+      if (fs.existsSync(versionFile)) {
+        currentVersion = require(versionFile).version;
+      }
+      if (new Date(latestRemote).getTime() > new Date(currentVersion).getTime()) {
+        await downloadBinary();
+        const version = await getBinaryVersion();
+        fs.writeFileSync(versionFile, JSON.stringify({ version }, null, 2));
+        resolve({ time: (new Date().getTime() - startTime) / 1000, version });
+      } else {
+        resolve({ time: (new Date().getTime() - startTime) / 1000, version: currentVersion });
+      }
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
