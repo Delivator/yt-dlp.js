@@ -10,7 +10,7 @@ FFmpeg has to be installed to PATH
 
 To install yt-dlp.js run `npm install yt-dlp.js --save`
 
-To update the yt-dlp binary, run `npm run updateytdl` or run the setup script (`node setup.js`)
+To update the yt-dlp binary, run `npm run updateytdlp` or run the setup script (`node setup.js`)
 
 ## Usage
 

@@ -25,7 +25,7 @@ function getBinaryVersion() {
     let binaryPath = __dirname + "/bin/yt-dlp";
     if (isWin) binaryPath += ".exe";
     if (!fs.existsSync(binaryPath)) {
-      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdl'");
+      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdlp'");
     }
     execFile(binaryPath, ["--version"], (error, stdout, stderr) => {
       if (error) reject(error);
@@ -66,7 +66,7 @@ run = (url, args, options) => {
     args.push(url);
     if (isWin) binaryPath += ".exe";
     if (!fs.existsSync(binaryPath)) {
-      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdl'");
+      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdlp'");
     }
     execFile(binaryPath, args, options, (error, stdout) => {
       if (error) reject(error);
