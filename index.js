@@ -6,7 +6,7 @@ const isWin = /^win/.test(process.platform);
 
 function getRemoteVersion() {
   return new Promise((resolve, reject) => {
-    const API_URL = "https://api.github.com/repos/rg3/youtube-dl/releases/latest";
+    const API_URL = "https://api.github.com/repos/rg3/yt-dlp/releases/latest";
     got.get(API_URL)
       .then(response => {
         if (response.statusCode === 200) {
@@ -22,10 +22,10 @@ function getRemoteVersion() {
 
 function getBinaryVersion() {
   return new Promise((resolve, reject) => {
-    let binaryPath = __dirname + "/bin/youtube-dl";
+    let binaryPath = __dirname + "/bin/yt-dlp";
     if (isWin) binaryPath += ".exe";
     if (!fs.existsSync(binaryPath)) {
-      reject("Couldn't find youtube-dl binary. Try running 'npm run updateytdl'");
+      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdl'");
     }
     execFile(binaryPath, ["--version"], (error, stdout, stderr) => {
       if (error) reject(error);
@@ -40,11 +40,11 @@ function downloadBinary() {
     if (!fs.existsSync(__dirname + "/bin")) fs.mkdirSync(__dirname + "/bin");
     let url, filePath;
     if (isWin) {
-      url = "https://yt-dl.org/downloads/latest/youtube-dl.exe";
-      filePath = __dirname + "/bin/youtube-dl.exe";
+      url = "https://yt-dl.org/downloads/latest/yt-dlp.exe";
+      filePath = __dirname + "/bin/yt-dlp.exe";
     } else {
-      url = "https://yt-dl.org/downloads/latest/youtube-dl";
-      filePath = __dirname + "/bin/youtube-dl";
+      url = "https://yt-dl.org/downloads/latest/yt-dlp";
+      filePath = __dirname + "/bin/yt-dlp";
     }
     got(url, { followRedirect: true, encoding: null })
       .then(resp => {
@@ -57,11 +57,11 @@ function downloadBinary() {
 
 run = (url, args, options) => {
   return new Promise((resolve, reject) => {
-    let binaryPath = __dirname + "/bin/youtube-dl";
+    let binaryPath = __dirname + "/bin/yt-dlp";
     args.push(url);
     if (isWin) binaryPath += ".exe";
     if (!fs.existsSync(binaryPath)) {
-      reject("Couldn't find youtube-dl binary. Try running 'npm run updateytdl'");
+      reject("Couldn't find yt-dlp binary. Try running 'npm run updateytdl'");
     }
     execFile(binaryPath, args, options, (error, stdout, stderr) => {
       if (error) reject(error);

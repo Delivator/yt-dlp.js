@@ -1,7 +1,7 @@
 {
-  "name": "youtube-dl.js",
+  "name": "yt-dlp.js",
   "version": "1.1.1",
-  "description": "youtube-dl wrapper for node",
+  "description": "yt-dlp wrapper for node",
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
@@ -10,17 +10,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Delivator/youtube-dl.js.git"
+    "url": "git+https://github.com/Delivator/yt-dlp.js.git"
   },
   "keywords": [
-    "youtube-dl"
+    "yt-dlp"
   ],
   "author": "Delivator",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Delivator/youtube-dl.js/issues"
+    "url": "https://github.com/Delivator/yt-dlp.js/issues"
   },
-  "homepage": "https://github.com/Delivator/youtube-dl.js#readme",
+  "homepage": "https://github.com/Delivator/yt-dlp.js#readme",
   "dependencies": {
     "got": "^8.3.2"
   }

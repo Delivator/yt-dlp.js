@@ -1,6 +1,6 @@
-# youtube-dl.js
-[![Build Status](https://travis-ci.org/Delivator/youtube-dl.js.svg?branch=master)](https://travis-ci.org/Delivator/youtube-dl.js)
-[![npm version](https://badge.fury.io/js/youtube-dl.js.svg)](https://www.npmjs.com/package/youtube-dl.js)
+# yt-dlp.js
+[![Build Status](https://travis-ci.org/Delivator/yt-dlp.js.svg?branch=master)](https://travis-ci.org/Delivator/yt-dlp.js)
+[![npm version](https://badge.fury.io/js/yt-dlp.js.svg)](https://www.npmjs.com/package/yt-dlp.js)
 
 ## Installation
 
@@ -8,14 +8,14 @@
 
 FFmpeg has to be installed to PATH
 
-To install youtube-dl.js run `npm install youtube-dl.js --save`
+To install yt-dlp.js run `npm install yt-dlp.js --save`
 
-To update the youtube-dl binary, run `npm run updateytdl` or run the setup script (`node setup.js`)
+To update the yt-dlp binary, run `npm run updateytdl` or run the setup script (`node setup.js`)
 
 ## Usage
 
 ```javascript
-const ytdl = require("youtube-dl.js");
+const ytdl = require("yt-dlp.js");
 
 let url = "https://youtu.be/q5weS3aY-Qc",
     filename = `${new Date().getTime()}.%(ext)s`,
